@@ -1,0 +1,30 @@
+zabbix_export:
+  version: '7.0'
+  template_groups:
+    - uuid: 846977d1dfed4968bc5f8bdb363285bc
+      name: 'Templates/Operating systems'
+  templates:
+    - uuid: 2d26b8ffc95a45fd91061db4c495e3fe
+      template: 'Template Coredumps Development'
+      name: 'Template Coredumps Development'
+      description: 'Coredumps monitoring template for development and testing purposes'
+      groups:
+        - name: 'Templates/Operating systems'
+      items:
+        - uuid: bce29150890346f99b8c21889997c796
+          name: Coredumps
+          key: os.coredumps
+          value_type: LOG
+          trends: '0'
+          description: 'Monitor coredumps on system'
+          triggers:
+            - uuid: a143fff9c8be4cf8a52742e4679cf014
+              expression: 'length(last(/Template Coredumps Development/os.coredumps)) > 0'
+              name: 'Coredump(s) found'
+              priority: WARNING
+            - uuid: ef9b0edf9a804408be98dbb8d2c43464
+              expression: 'change(/Template Coredumps Development/os.coredumps)<>0'
+              name: 'Coredump(s) updated'
+              opdata: '{ITEM.LASTVALUE}'
+              priority: WARNING
+              type: MULTIPLE
